@@ -27,11 +27,13 @@ console.log("aftrer axios");
            
             if(res.data.success){
                 toast.success(res.data.message)
+
                 toast("redirect to home page")
+                localStorage.setItem("token",res.data.data);
                 navigate("/home")
             }
             else{
-                toast.error(res.data.message)
+                toast.error(res.data.message);
             }
     
  //console.log(data);
@@ -42,7 +44,7 @@ console.log(error);
 }
     };
   return (
-    <div>
+    <div className='log'>
        <div className="authenticationContainer">
        <form  onSubmit={handleSubmit}>
        <div className="authentication">
