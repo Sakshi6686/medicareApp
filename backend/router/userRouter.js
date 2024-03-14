@@ -8,6 +8,7 @@ import crypto from "crypto"
 const router = express.Router();
 
 router.post("/register",async(req,res) =>{
+    try{
     const{username,email,password,confirmPassword,location}=req.body;
         console.log("data recieved");
     if(!username||!email||!password||!confirmPassword||!location){
@@ -67,6 +68,10 @@ console.log("user createdd",newUser);
 //     console.log("returning user");
 //    // console.log(userToReturn);
    return res.status(200).send({message:"user created successfully",success:true});
+    }
+    catch(err){
+console.log(err);
+    }
 })
 
 // router.post("confirm/:token",async (req,res)=>{
