@@ -33,11 +33,11 @@ console.log("aftrer axios");
             else{
                 toast.error(res.data.message)
             }
-    const data = await res.json();
- console.log(data);
+    
+ //console.log(data);
 
-} catch (err) {
-
+} catch (error) {
+console.log(error);
    toast.error("something went wrong!")
 }
     };
