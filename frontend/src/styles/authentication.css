@@ -10,7 +10,7 @@
     background-color: rgb(27, 73, 101);
     position: absolute;
     width:100%;
-  
+        height: 100vh;
     /* background:url(cowboy.png); */
     background-size: cover;
     background-position: right center;
@@ -117,3 +117,4 @@
     background-size:cover;
     transition:transform 0.2s;
 }
+ 

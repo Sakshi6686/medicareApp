@@ -22,10 +22,10 @@ const verifyEmail=async(email,link)=>{
             `
         });
         console.log("mail send successfully");
-        return res.status(200).send({message:"Email sent ,check your mail",success:true});
+        return true
     }
     catch(err){
-        return res.status(200).send({message:"Email is not valid",success:false});
+        return false
     }
 
 }

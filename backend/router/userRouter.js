@@ -5,8 +5,8 @@ import bcrypt from "bcrypt";
 import verifyEmail from "../utils/verifyEmail.js";
 import Token from "../models/Token.js";
 import crypto from "crypto"
+//import authMiddleware from "../middlewares/authMiddlewares.js"
 const router = express.Router();
-
 router.post("/register",async(req,res) =>{
     try{
     const{username,email,password,confirmPassword,location}=req.body;
@@ -34,7 +34,7 @@ router.post("/register",async(req,res) =>{
    
    
     const newUser=await User.create(newUserDetails);
-    const token=await getToken(email,newUser);
+   // const token=await getToken(email,newUser);
 console.log("user createdd",newUser);
   
 
@@ -56,21 +56,22 @@ console.log("user createdd",newUser);
 
     // const link=`http://localhost:3000//api/user/confirm/${tokenEmail.token}`;
     // const  verification =await verifyEmail(email,link);
-    // if(verification.success){
+    // if(verification){
     //     return res.status(200).send({message:"Email sent ,check your mail",success:true});
     // }
     // else{
-    //     return res.status(200).send({message:verification.message,success:false});
+    //     return res.status(200).send({message:"email is not valid",success:false});
     // }
     
    
 
 //     console.log("returning user");
 //    // console.log(userToReturn);
-   return res.status(200).send({message:"user created successfully",success:true});
+  return res.status(200).send({message:"user created successfully",success:true});
     }
     catch(err){
-console.log(err);
+        console.log(err);
+        return res.status(500).send({message:"Error in creating user", success:false,err});
     }
 })
 
@@ -90,6 +91,8 @@ console.log(err);
 // }
 // )
 router.post("/login",async (req,res)=>{
+
+    try{
 
     const {email,password}=req.body;
     
@@ -124,11 +127,40 @@ router.post("/login",async (req,res)=>{
    // delete userToReturn.password;
     //console.log(userToReturn);
 
-    return res.status(200).send({message:"login successful", success:true,token});
-    
+    return res.status(200).send({message:"login successful", success:true,data:token});
+}
+catch(err){
+    console.log(err);
+    return res.status(500).send({message:"Error loging in ", success:false,err});
+}
 
 
 })
+
+// router.post("get-user-info-by-id",async()=>{
+
+//     try{
+//                 const user=await User.findOne({id:req.body.userId})
+//                 if(!user){
+//                     return res.status(200).send({message:"user does not exist",success:false});
+
+                    
+//                 }
+//                 else{
+//                     res.status(200).send({success:true,data:{
+//                         name:user.name,
+//                         email:user.email,
+//                     }})
+//                 }
+//             }
+//                 catch(err){
+
+//                 }
+//     }
+//     catch(err){
+
+//     }
+// })
 
 
 export default router;

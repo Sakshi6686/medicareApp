@@ -1,6 +1,6 @@
 import React from 'react'
 import 'antd/dist/antd.css';
-function layout ({children}){
+function Layout ({children}){
   return (
     <div className='main p-2'>
         <div className='d-flex layout'>
@@ -18,5 +18,7 @@ function layout ({children}){
     </div>
   )
 }
+export default Layout;
 
-export default layout
+
+ 
