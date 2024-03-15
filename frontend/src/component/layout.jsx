@@ -7,7 +7,7 @@ function Layout ({children}){
     const location =useLocation()
     const userMenu=[
       {  name1: 'Home',
-        path: '/',
+        path: '/home',
         icon: 'ri-home-line'
     },
     {
