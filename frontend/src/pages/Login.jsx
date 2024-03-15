@@ -33,11 +33,8 @@ console.log("aftrer axios");
                 toast.success(res.data.message)
 
                 toast("redirect to home page")
-<<<<<<< HEAD
-=======
                 localStorage.setItem("token",res.data.data);
->>>>>>> 8335195ade7c031769f8e4c68415dbf47a89acc8
-                navigate("/")
+                navigate("/home")
             }
             else{
                 toast.error(res.data.message);
