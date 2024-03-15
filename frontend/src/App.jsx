@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import "./styles/authentication.css"
 import Home from './pages/Home';
 import {Toaster} from "react-hot-toast"
-
+import Home from './pages/Home';
  
 function App () {
   return (

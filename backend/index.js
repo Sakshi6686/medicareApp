@@ -12,9 +12,9 @@ app.use(express.json());
 app.use(cors());
 const port = process.env.PORT||8000;
 
-console.log("in back")
+//console.log("in back")
 app.use('/api/user', router);
-console.log("in back 2")
+//console.log("in back 2")
 // app.get('/', (req, res) => {
 //   res.send("Hello World");
 // });
