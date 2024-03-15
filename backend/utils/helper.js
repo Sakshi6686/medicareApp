@@ -12,7 +12,7 @@
 import jwt from "jsonwebtoken";
 
 const getToken = (email, user) => {
-    const token = jwt.sign({ identifier: user.id }, "ksfknkknvoaovno");
+    const token = jwt.sign({ identifier: user.id },process.env.JWT_SECRET);
     return token;
 };
 

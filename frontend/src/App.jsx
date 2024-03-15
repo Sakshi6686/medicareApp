@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import {BrowserRouter,Routes,Route} from "react-router-dom"
 import 'antd/dist/antd.css';
 import "./styles/authentication.css"
+import Home from './pages/Home';
 import {Toaster} from "react-hot-toast"
 
  
@@ -18,7 +19,7 @@ function App () {
    <Routes>
     <Route path="/login" element={<Login />} /> 
     <Route path="/register" element={<Register />} /> 
-    <Route path="/" element={<Login />} />
+    <Route path="/" element={<Home />} />
    </Routes>
    </BrowserRouter>
    

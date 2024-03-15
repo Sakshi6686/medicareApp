@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
+// import { useSelector,useDispatch } from 'react-redux';
+
 const Login = () => {
+    // const {loading}=useSelector(state=>state.alerts)
+    // console.log(loading)
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -28,7 +32,7 @@ console.log("aftrer axios");
             if(res.data.success){
                 toast.success(res.data.message)
                 toast("redirect to home page")
-                navigate("/home")
+                navigate("/")
             }
             else{
                 toast.error(res.data.message)
