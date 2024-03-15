@@ -5,7 +5,7 @@ const Frontpg = () => {
   return (
     <div className="container">
         <div className="logo">
-            <img src={require('./images/doctor.jpg')} alt="img"/>
+            <img src={require('../pages/images/medi3.jpg')} alt="img"/>
         </div>
         <div className="buttons">
             <button >Login</button>
