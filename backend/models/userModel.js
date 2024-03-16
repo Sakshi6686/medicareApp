@@ -21,13 +21,28 @@ const userSchema=new mongoose.Schema({
         },
         required: true,
     },
+    isDoctor:{
+        type:Boolean,
+        default:false,
+    },
     
+    isAdmin:{
+        type:Boolean,
+        default:false,
+    },
+    seenNotification:{
+        type:Array,
+        default:[],
+    },
+    unseenNotification:{
+        type:Array,
+        default:[],
+    },
      
-    // verified:{
-    //     type:Boolean,
-    //     default:false,
-    // }
-})
+}
+,
+{timestamps:true,}
+)
 
 const userModel=mongoose.model("users",userSchema)
 

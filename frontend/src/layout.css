@@ -6,6 +6,11 @@
     color: white;
     font-weight: bold;
 }
+.ant-scroll-number-only-unit{
+    padding-right:-10px !important;
+    padding-bottom:-10px !important ;
+
+}
 .sidebar{
     background-color:  rgb(27, 73, 101);
     border-radius: 5px;
@@ -46,6 +51,7 @@
     box-shadow:0 0 2px grey;
     height:82vh;
     width: 100%;
+    padding: 15px;
 }
 .menu{
     margin-top: 100px;

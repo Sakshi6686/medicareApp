@@ -5,7 +5,10 @@ import bcrypt from "bcrypt";
 import verifyEmail from "../utils/verifyEmail.js";
 import Token from "../models/Token.js";
 import crypto from "crypto"
+import Doctor from "../models/doctorModel.js"
 import authMiddleware from "../middlewares/authMiddlewares.js";
+import { rootCertificates } from "tls";
+import { log } from "console";
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
@@ -35,8 +38,8 @@ router.post("/register", async (req, res) => {
 
 
         const newUser = await User.create(newUserDetails);
-        const token = await getToken(email, newUser);
-        console.log("user createdd", newUser);
+        // const token = await getToken(email, newUser);
+        // console.log("user createdd", newUser);
 
 
         // const userToReturn = {
@@ -113,6 +116,7 @@ router.post("/login", async (req, res) => {
         }
 
         const token = await getToken(email, user);
+        console.log(token);
 
         //const  userToReturn={...user.toJSON(),token};
         // const userToReturn = {
@@ -126,7 +130,7 @@ router.post("/login", async (req, res) => {
         // delete userToReturn.password;
         //console.log(userToReturn);
 
-        return res.status(200).send({ message: "login successful", success: true, token });
+        return res.status(200).send({ message: "login successful", success: true, data:token });
 
     } catch (err) {
         console.log(err);
@@ -138,7 +142,9 @@ router.post("/login", async (req, res) => {
 router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
     try {
         console.log("try get");
-        const user = await User.findById(req.body.userId);
+         const user = await User.findById(req.body.userId);
+        // const user = await User.findById(req.userId);
+        user.password=undefined
         console.log(user);
         if (!user) {
             console.log("not user get");
@@ -146,17 +152,48 @@ router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
         }
         else {
             console.log("in else get-user");
+
+
+            console.log(user.username);
+            console.log(user.unseenNotification);
             return res.status(200).send({
                 success: true, data: {
-                    name: user.username,
-                    email: user.email,
-                }
+                      user 
+                },
             });
         }
     }
     catch (err) {
+        console.log(err);
         return res.status(500).send({ message: "Error getting the user info", success: false });
     }
 })
 
+router.post("/apply-doctor-account",authMiddleware,async (req,res)=>{
+    try{
+       
+
+                const newDoctor=new Doctor({...req.body,status:"pending"});
+                await newDoctor.save();
+                const adminUser=await User.findOne({isAdmin:true});
+                const unseenNotification=adminUser.unseenNotification
+                unseenNotification.push({
+                    type:"new-doctor-request",
+                    message:`${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account`,
+                    data:{
+                        doctorId:newDoctor.id,
+                        name:newDoctor.firstName + " " +newDoctor.lastName
+                    },
+                    onClickPath:"/admin/doctors"
+
+                })
+                await User.findByIdAndUpdate(adminUser.id,{unseenNotification});
+                res.status(200).send({success:true,message:"Doctor account applied successfully"})
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({message:"Error applying doctor account",success:false,err})
+    }
+    
+})
 export default router;

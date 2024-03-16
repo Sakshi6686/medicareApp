@@ -31,19 +31,21 @@ console.log("aftrer axios");
            
             if(res.data.success){
                 toast.success(res.data.message)
-
+                       
                 toast("redirect to home page")
                 localStorage.setItem("token",res.data.data);
+                console.log("login redirection to home",res.data.message);
                 navigate("/home")
             }
             else{
+                console.log("login else ",res.data.message);
                 toast.error(res.data.message);
             }
     
  //console.log(data);
 
 } catch (error) {
-console.log(error);
+console.log("error",error);
    toast.error("something went wrong!")
 }
     };
