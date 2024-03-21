@@ -6,72 +6,41 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import {  useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideLoading, showLoading } from '../redux/alertSlice';
+
 
 const ApplyDoctor = () => {
-  const [user,setUser]=useState({
-        
-  });
-  useEffect(() => {
-    const getUser=async()=>{
-                try{
-                  const res=await axios.post("/api/user/get-user-info-by-id",{},{
-                    headers:{
-                      Authorization: 'Bearer '+localStorage.getItem("token")
-                    }
-                  });
-                  console.log("res.data.data",res.data.data.user)
-                    setUser(res.data.data.user)
-                    console.log("user",user);
-                    console.log("username",user.username);
-              
-                } catch(err){
-                  console.log(err);
-                }
-              
-              }
-            getUser();
-    
-          }, []);
-          const navigate=useNavigate()
-  const onFinish=async (values)=>{
-       // console.log("Success",values);
-        console.log(values);
-       try{
-        console.log("user and userid",user);
-        console.log("user id",user._id);
-        console.log("token",localStorage.getItem("token"));
-        //console.log({...values,userId:user._id});
-
-      //  const dataTobeSent={...values,userId:user._id}
-       // console.log(dataTobeSent);
-        const res=await axios.post("/api/user/apply-doctor-account",
-      values,
-        {
-          
-        headers:{
-          Authorization:'Bearer '+localStorage.getItem("token")
-        },
-         
-        },
-    
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const {user}=useSelector((state)=>state.user)
+  const onFinish=async(values)=>{
+    try{
+        dispatch(showLoading());
+        const res=await axios.post("/api/user/apply-doctor-account",{...values,userId:user._id},
+        {headers:{
+          Authorization:`Bearer ${localStorage.getItem("token")}`,
+      },
+  }
         );
-        console.log("object gen",{...values,userId:user._id});
-        console.log(res.data);
+        dispatch(hideLoading());
         if(res.data.success){
-          console.log("toast",res.data.messge);
-          toast.success(res.data.message);
+          toast.success(res.data.message)
           navigate("/home")
         }
         else{
-          console.log("toast error",res.data.messge);
-          toast.error(res.data.message);
+          toast.error(res.data.message)
         }
-       }
-       catch(err){
-        console.log(err);
-          toast.error("Something went wrong")
-       }
+
+
+    }
+    catch(err){
+      dispatch(hideLoading());
+      toast.error("Something went wrong")
+
+    }
   }
+
   return (
     <Layout>
         <h1 className='page-title'>Apply Doctor</h1>

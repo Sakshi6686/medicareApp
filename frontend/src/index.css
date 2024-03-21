@@ -35,3 +35,31 @@ input:focus ,.ant-picker{
     height: 40px!important;
     
 }
+.anchor{
+    color: black !important;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 16px !important;
+
+}
+.anchor-hover{
+    text-decoration: underline !important;
+}
+.spinner-parent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+background-color: rgba(0, 0, 0, 0.482);
+position: fixed;
+top: 0;
+left: 0;
+height: 100%;
+width: 100%;
+z-index: 9999;
+}
+.spinner-border{
+    height: 5rem;
+    width: 5rem;
+    color: white !important;
+}

@@ -20,10 +20,10 @@ const ForgotPs = () => {
         e.preventDefault();
            
         try {
-            console.log("in try");
-            console.log(formData);
+           // console.log("in try");
+            //console.log(formData);
             const res=await axios.post("api/user/login",formData)
-console.log("aftrer axios");
+//console.log("aftrer axios");
            
             if(res.data.success){
                 toast.success(res.data.message)
@@ -34,7 +34,7 @@ console.log("aftrer axios");
                 toast.error(res.data.message)
             }
     const data = await res.json();
- console.log(data);
+ //console.log(data);
 
 } catch (err) {
 

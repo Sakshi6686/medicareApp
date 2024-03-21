@@ -3,9 +3,12 @@ import React ,{useState} from 'react'
 import axios from "axios"
 import toast from "react-hot-toast"
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { hideLoading ,showLoading} from '../redux/alertSlice';
  
  
 const Register = () => {
+    const dispatch=useDispatch();
    const navigate=useNavigate();
    const [locationErr, setLocationErr] = useState(false);
     const [location,setLocation]=useState({
@@ -45,25 +48,28 @@ const Register = () => {
         }
         formDataObject["location"] = location ;
 
-        console.log(formDataObject);
+      //  console.log(formDataObject);
 
         try {
-            const res=await axios.post("api/user/register",formDataObject)
-console.log(res.data);
+          
+            dispatch(showLoading());
+            const res=await axios.post("api/user/register",formDataObject);
+            dispatch(hideLoading());
+//console.log(res.data);
             if(res.data.success){
                 toast.success(res.data.message)
-                console.log(res.data.message);
+                //console.log(res.data.message);
                 toast("redirecting to login page")
                 navigate("/login")
             }
             else{
-                console.log(res.data.message);
+               // console.log(res.data.message);
                 toast.error(res.data.message)
             }
 
         }
         catch(err){
-            
+            dispatch(hideLoading());
                 toast.error("something went wrong")
         }
     }

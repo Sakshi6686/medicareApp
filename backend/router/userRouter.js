@@ -141,21 +141,21 @@ router.post("/login", async (req, res) => {
 
 router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
     try {
-        console.log("try get");
+       // console.log("try get");
          const user = await User.findById(req.body.userId);
         // const user = await User.findById(req.userId);
         user.password=undefined
         console.log(user);
         if (!user) {
-            console.log("not user get");
+          //  console.log("not user get");
             return res.status(200).send({ message: "User does not exist", success: false });
         }
         else {
-            console.log("in else get-user");
+          //  console.log("in else get-user");
 
 
-            console.log(user.username);
-            console.log(user.unseenNotification);
+            // console.log(user.username);
+            // console.log(user.unseenNotification);
             return res.status(200).send({
                 success: true, data: {
                       user 
@@ -174,6 +174,7 @@ router.post("/apply-doctor-account",authMiddleware,async (req,res)=>{
        
 
                 const newDoctor=new Doctor({...req.body,status:"pending"});
+                
                 await newDoctor.save();
                 const adminUser=await User.findOne({isAdmin:true});
                 const unseenNotification=adminUser.unseenNotification
@@ -189,6 +190,63 @@ router.post("/apply-doctor-account",authMiddleware,async (req,res)=>{
                 })
                 await User.findByIdAndUpdate(adminUser.id,{unseenNotification});
                 res.status(200).send({success:true,message:"Doctor account applied successfully"})
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({message:"Error applying doctor account",success:false,err})
+    }
+    
+})
+
+
+router.post("/mark-all-notifications-as-seen",authMiddleware,async (req,res)=>{
+    try{
+       
+        const user=await User.findOne({_id:req.body.userId});
+        const unseenNotification=user.unseenNotification;
+        const seenNotification=user.seenNotification;
+        seenNotification.push(...unseenNotification);
+        user.seenNotification==unseenNotification;
+        user.unseenNotification=[];
+        user.seenNotification=seenNotification;
+        const updatedUser = await user.save();
+        updatedUser.password=undefined;
+        console.log("updateduser in mark all",updatedUser);
+        res.status(200).send({
+            success:true,
+            message:"All notifications have been seen",
+            data:{updatedUser},
+        })
+
+
+                
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({message:"Error applying doctor account",success:false,err})
+    }
+    
+})
+
+
+
+router.post("/delete-all-notifications",authMiddleware,async (req,res)=>{
+    try{
+       
+        const user=await User.findOne({_id:req.body.userId});
+        
+        user.unseenNotification=[];
+        user.seenNotification=[];
+        const updatedUser = await user.save();
+        updatedUser.password=undefined;
+        res.status(200).send({
+            success:true,
+            message:"All notifications are deleted",
+            data:{updatedUser},
+        })
+
+
+                
     }
     catch (err) {
         console.log(err);

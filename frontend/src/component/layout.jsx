@@ -5,14 +5,15 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import { Badge } from 'antd';
+import { useSelector } from 'react-redux';
 function Layout ({children}){
 
     const[collapsed,setCollapsed]=useState(false);
     const location =useLocation()
     const navigate=useNavigate()
-    const [user,setUser]=useState({
+    // const [user,setUser]=useState({
         
-    });
+    // });
     //const [token,setToken]=useState('');
 
      
@@ -33,30 +34,31 @@ function Layout ({children}){
     //     }
       
     //   }
-    console.log("hiii");
-      useEffect(() => {
-const getUser=async()=>{
-            try{
-              console.log("hi");
-              const res=await axios.post("/api/user/get-user-info-by-id",{},{
-                headers:{
-                  Authorization: 'Bearer '+localStorage.getItem("token")
-                }
-              });
-              console.log("res.data.data",res.data.data.user)
-                setUser(res.data.data.user)
-                console.log("user",user);
-                console.log("username",user.username);
+  //  console.log("hiii");
+//       useEffect(() => {
+// const getUser=async()=>{
+//             try{
+//               //console.log("hi");
+//               const res=await axios.post("/api/user/get-user-info-by-id",{},{
+//                 headers:{
+//                   Authorization: 'Bearer '+localStorage.getItem("token")
+//                 }
+//               });
+//              // console.log("res.data.data",res.data.data.user)
+//                 setUser(res.data.data.user)
+//                 // console.log("user",user);
+//                 // console.log("username",user.username);
           
-            } catch(err){
-              console.log(err);
-            }
+//             } catch(err){
+//               console.log(err);
+//             }
           
-          }
-        getUser();
+//           }
+//         getUser();
 
-      }, []);
-    const userMenu=[
+//       }, []);
+    const {user}=useSelector((state)=>state.user)
+const userMenu=[
       {  name1: 'Home',
         path: '/home',
         icon: 'ri-home-line'
@@ -105,12 +107,12 @@ const getUser=async()=>{
 //       if (user && user.isAdmin){
 //             menuToBeRendered=adminMenu
 //       }
-console.log(user);
-console.log("admin",user.isAdmin);
+// console.log(user);
+// console.log("admin",user.isAdmin);
       let menuToBeRendered = user && user.isAdmin ? adminMenu : userMenu;
    
    
-    console.log("menuTobe",menuToBeRendered);
+  //  console.log("menuTobe",menuToBeRendered);
   return (
     <div className='main'>
         <div className='d-flex layout'>
@@ -140,10 +142,10 @@ console.log("admin",user.isAdmin);
                 <div className='header'>
                   {collapsed?  <i className="ri-menu-2-fill header-action-icon" onClick={()=>setCollapsed(false)}></i>: <i className="ri-close-fill header-action-icon" onClick={()=>setCollapsed(true)}></i>}
                   <div className='d-flex align-items-center px-4'>
-                  {}
-                  <Badge count={user?.unseenNotification.length}> <i className="ri-notification-line header-action-icon px-3"></i></Badge>
-                       
-                        {console.log("username in div ",user?.username)}
+                  
+                  <Badge count={user && user.unseenNotification ? user.unseenNotification.length : 0} onClick={()=>navigate('/notifications')}> <i className="ri-notification-line header-action-icon px-3"></i></Badge>
+                 
+                         
                         <Link className='anchor mx-3' to="/profile">{user?.username}</Link>
                   </div>
                 </div>

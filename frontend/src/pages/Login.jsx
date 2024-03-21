@@ -2,12 +2,12 @@ import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-
-// import { useSelector,useDispatch } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
+import { hideLoading, showLoading } from '../redux/alertSlice';
+ 
 
 const Login = () => {
-    // const {loading}=useSelector(state=>state.alerts)
-    // console.log(loading)
+    const dispatch=useDispatch();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -24,28 +24,31 @@ const Login = () => {
         e.preventDefault();
            
         try {
-            console.log("in try");
+          //  console.log("in try");
+                dispatch(showLoading());
             console.log(formData);
             const res=await axios.post("api/user/login",formData)
-console.log("aftrer axios");
+            dispatch(hideLoading());
+//console.log("aftrer axios");
            
             if(res.data.success){
                 toast.success(res.data.message)
                        
                 toast("redirect to home page")
                 localStorage.setItem("token",res.data.data);
-                console.log("login redirection to home",res.data.message);
+               // console.log("login redirection to home",res.data.message);
                 navigate("/home")
             }
             else{
-                console.log("login else ",res.data.message);
+                //console.log("login else ",res.data.message);
                 toast.error(res.data.message);
             }
     
  //console.log(data);
 
 } catch (error) {
-console.log("error",error);
+console.log("error in log",error);
+dispatch(hideLoading());
    toast.error("something went wrong!")
 }
     };

@@ -11,11 +11,20 @@ import Frontpg from './pages/frontpg';
 import ProtectedRoute from './component/ProtectedRoute';
 import PublicRoute from './component/PublicRoute';
 import ApplyDoctor from "./pages/ApplyDoctor"
+import Notifications from './pages/Notifications';
+import { UseSelector, useSelector } from 'react-redux';
 
 function App() {
+  const {loading}=useSelector((state)=>state.alerts);
   return (
 
     <BrowserRouter>
+    {loading && <div className="spinner-parent">
+<div class="spinner-border" role="status">
+
+</div>
+</div> }
+     
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -25,6 +34,7 @@ function App() {
         <Route path="/register" element={<PublicRoute><Register/></PublicRoute>} />
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/apply-doctor" element={<ProtectedRoute><ApplyDoctor/></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><Notifications/></ProtectedRoute>} />
         <Route path="/" element={<Frontpg />} />
       </Routes>
     </BrowserRouter>
