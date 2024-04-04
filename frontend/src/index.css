@@ -20,6 +20,10 @@ input:focus ,.ant-picker{
     color: rgba(0, 0, 0, 0.833);
     font-weight: bold;
 }
+.card{
+    box-shadow: 0 0 2px rgb(190, 190, 190);
+    border-radius: 0!important ;
+}
 .card-title{
     font-size: 22px;
     font-weight: bold;
@@ -62,4 +66,22 @@ z-index: 9999;
     height: 5rem;
     width: 5rem;
     color: white !important;
+}
+.normal-text{
+    font-size:1rem;
+}
+.role{
+    color: white;
+    font-size: 14px;
+    margin-top: -20px;
+    
+
+}
+p{
+    color: rgba(0, 0, 0, 0.671) !important;
+    margin-top: 3px !important;
+    padding-top: 0 !important;
+}
+.cursor-pointer{
+    cursor: pointer;
 }

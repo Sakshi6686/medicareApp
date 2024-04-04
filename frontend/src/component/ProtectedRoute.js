@@ -10,6 +10,7 @@ import { hideLoading, showLoading } from '../redux/alertSlice';
 
 const ProtectedRoute = (props) => {
 const {user}=useSelector((state)=>state.user)
+console.log(user);
 const navigate=useNavigate();
 const dispatch=useDispatch();;
 const getUser=async()=>{
@@ -23,7 +24,8 @@ const getUser=async()=>{
     })
 dispatch(hideLoading())
     if(res.data.success){
-            dispatch(setUser(res.data.data.user))
+            dispatch(setUser(res.data.data))
+            console.log("user in protected route res.data.data",user);
           
     }
     else{

@@ -11,30 +11,31 @@ function Layout ({children}){
     const[collapsed,setCollapsed]=useState(false);
     const location =useLocation()
     const navigate=useNavigate()
-    // const [user,setUser]=useState({
+//      const [user,setUser]=useState({
+
         
-    // });
-    //const [token,setToken]=useState('');
+//      });
+//     const [token,setToken]=useState('');
 
      
 
-    // const getUser=async()=>{
-    //     try{
-    //       const res=await axios.post("/api/user/get-user-info-by-id",{},{
-    //         headers:{
-    //           Authorization: 'Bearer '+localStorage.getItem("token")
-    //         }
-    //       });
-    //       console.log(res.data.data)
-    //         setUser(res.data.data)
-    //         console.log(user);
+//     const getUser=async()=>{
+//         try{
+//           const res=await axios.post("/api/user/get-user-info-by-id",{},{
+//             headers:{
+//               Authorization: 'Bearer '+localStorage.getItem("token")
+//             }
+//           });
+//           console.log(res.data.data)
+//             setUser(res.data.data)
+//             console.log(user);
       
-    //     } catch(err){
-    //       console.log(err);
-    //     }
+//         } catch(err){
+//           console.log(err);
+//         }
       
-    //   }
-  //  console.log("hiii");
+//       }
+//    console.log("hiii");
 //       useEffect(() => {
 // const getUser=async()=>{
 //             try{
@@ -45,7 +46,7 @@ function Layout ({children}){
 //                 }
 //               });
 //              // console.log("res.data.data",res.data.data.user)
-//                 setUser(res.data.data.user)
+//                 setUser(res.data.data)
 //                 // console.log("user",user);
 //                 // console.log("username",user.username);
           
@@ -57,7 +58,14 @@ function Layout ({children}){
 //         getUser();
 
 //       }, []);
-    const {user}=useSelector((state)=>state.user)
+
+
+
+ const {user}=useSelector((state)=>state.user)
+   console.log("lay",user);
+   const userId=user && user._id;
+   console.log("user ID",userId);
+
 const userMenu=[
       {  name1: 'Home',
         path: '/home',
@@ -73,13 +81,30 @@ const userMenu=[
         path:'/apply-doctor',
         icon:'ri-hospital-line',
     },
-    {
-        name1:'Profile',
-        path:'/profile',
-        icon:'ri-user-line',
-    },
+    
      
     ];
+
+    const doctorMenu=[
+        {  name1: 'Home',
+          path: '/home',
+          icon: 'ri-home-line'
+      },
+      {
+          name1:'Appointments',
+          path:'/doctor/appointments',
+          icon:'ri-file-list-line',
+      },
+       
+      {
+          name1:'Profile',
+          path:`/doctor/profile/`,
+          icon:'ri-user-line',
+      },
+       
+      ];
+
+
     const adminMenu=[
         {  name1: 'Home',
           path: '/home',
@@ -87,17 +112,17 @@ const userMenu=[
       },
       {
           name1:'Users',
-          path:'./users',
+          path:'/admin/userslist',
           icon:'ri-user-line',
       },
       {
           name1:'Doctors',
-          path:'./doctors',
+          path:'/admin/doctorslist',
           icon:'ri-user-star-line',
       },
       {
           name1:'Profile',
-          path:'./profile',
+          path:"/doctor/profile/",
           icon:'ri-user-line',
       },
       
@@ -109,8 +134,22 @@ const userMenu=[
 //       }
 // console.log(user);
 // console.log("admin",user.isAdmin);
-      let menuToBeRendered = user && user.isAdmin ? adminMenu : userMenu;
-   
+//console.log("layout",user.isAdmin);
+      let menuToBeRendered = user && user.isAdmin ? adminMenu : user && user.isDoctor?doctorMenu:userMenu;
+      
+      if (user) {
+        menuToBeRendered = menuToBeRendered.map((menu) => {
+          if (menu.path === "/doctor/profile/") {
+            return {
+              ...menu,
+              path: "/doctor/profile/" + userId,
+            };
+          }
+          return menu;
+        });
+      }
+      
+      const role=user && user.isAdmin ? "Admin" : user && user.isDoctor?"Doctor":"User";
    
   //  console.log("menuTobe",menuToBeRendered);
   return (
@@ -119,6 +158,7 @@ const userMenu=[
             <div className={`${collapsed?'collapsed-sidebar':'sidebar'}`}>
                <div className="sidebar-header">
                 <h1 className="logo">MA</h1>
+                <h1 className="role">{role}</h1>
                </div>
                <div className="menu">
                 {menuToBeRendered.map((menu,index)=>{

@@ -108,11 +108,12 @@ const Notifications = () => {
     <div>
       <Layout>
         <h1 className="page-title">Notifications</h1>
+        <hr />
         <Tabs>
         <Tabs.TabPane tab="Unseen" key={0}>
         <div className="d-flex justify-content-end"><h1 className="anchor" onClick={markAllAsSeen}>Mark all as seen</h1></div>
         {user && user.unseenNotification && user.unseenNotification.map((notification) => (
-    <div className="card p2" onClick={() => navigate(notification.onClickPath)}>
+    <div className="card p2 mt-2" onClick={() => navigate(notification.onClickPath)}>
         <div className="card-text">{notification.message}</div>
     </div>
 ))}
@@ -120,7 +121,7 @@ const Notifications = () => {
         <Tabs.TabPane tab="Seen" key={1}>
          <div className="d-flex justify-content-end"><h1 className="anchor" onClick={deleteAll}>Delete all</h1></div>
          {user && user.seenNotification && user.seenNotification.map((notification) => (
-    <div className="card p2" onClick={() => navigate(notification.onClickPath)}>
+    <div className="card p2 mt-2" onClick={() => navigate(notification.onClickPath)}>
         <div className="card-text">{notification.message}</div>
     </div>
 ))}
