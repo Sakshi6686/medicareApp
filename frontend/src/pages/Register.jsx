@@ -1,114 +1,82 @@
- 
-import React ,{useState} from 'react'
-import axios from "axios"
-import toast from "react-hot-toast"
+// Register.jsx
+import React, { useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { hideLoading ,showLoading} from '../redux/alertSlice';
+import { hideLoading, showLoading } from '../redux/alertSlice';
+import 'bootstrap/dist/css/bootstrap.min.css';
  
- 
+
 const Register = () => {
-    const dispatch=useDispatch();
-   const navigate=useNavigate();
-   const [locationErr, setLocationErr] = useState(false);
-    const [location,setLocation]=useState({
-        latitude:"",
-        longitude:"",
-    })
-    const getLocaion = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    setLocation({latitude:pos.coords.latitude,longitude:pos.coords.longitude})
-                    console.log('User location:', pos.coords.latitude, pos.coords.longitude);
-                },
-                (err) => {
-                  
-                    console.error('Error getting user location:', err);
-                    setLocationErr(true);
-                }
-            );
-        }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+   
+
+   
+
+  const onFinish = async (e) => {
+    e.preventDefault();
+     
+    const formData = new FormData(e.target);
+    const formDataObject = {};
+    formData.forEach((value, key) => {
+      formDataObject[key] = value;
+    });
+    console.log('Received form data:', formDataObject);
+    if (formDataObject.password !== formDataObject.confirmPassword) {
+      console.error('Error: Passwords do not match');
+      return;
     }
-    const onFinish=async (e)=>{
-        e.preventDefault();
-        getLocaion();
-        if (locationErr) {
-            window.location.reload();
-        }
-        const formData = new FormData(e.target);
-        const formDataObject = {};
-        formData.forEach((value, key) => {
-            formDataObject[key] = value;
-        });
-        console.log("Received form data:", formDataObject);
-        if (formDataObject.password !== formDataObject.confirmPassword) {
-            console.error('Error: Passwords do not match');
-            return; 
-        }
-        formDataObject["location"] = location ;
-
-      //  console.log(formDataObject);
-
-        try {
-          
-            dispatch(showLoading());
-            const res=await axios.post("api/user/register",formDataObject);
-            dispatch(hideLoading());
-//console.log(res.data);
-            if(res.data.success){
-                toast.success(res.data.message)
-                //console.log(res.data.message);
-                toast("redirecting to login page")
-                navigate("/login")
-            }
-            else{
-               // console.log(res.data.message);
-                toast.error(res.data.message)
-            }
-
-        }
-        catch(err){
-            dispatch(hideLoading());
-                toast.error("something went wrong")
-        }
-    }
-  return (
-    <div>
-        
-        <div className="authenticationContainer">
-       <form onSubmit={onFinish} >
-       <div className="authentication">
-                <h2>Sign Up</h2>
-                <div className="inputBox">
-                    <input name="username" type="text" placeholder="Username"/>
-                </div>
-                <div className="inputBox">
-                    <input name="email" type="email" placeholder="Email"/>
-                </div>
-                <div className="inputBox">
-                    <input name="password" type="password" placeholder="Password"/>
-                </div>
-                <div className="inputBox">
-                    <input name="confirmPassword" type="password" placeholder="confirmPassword"/>
-                </div>
-                
-                <div className="inputBox">
- 
-                     <button   type="submit" value="Register" id="btn">Submit</button>
-                </div>
-                <div className="group">
-                    <a href="/login" >Sign in</a>
-                    
-                </div>
-            </div>
-       </form>
-            
-            
-        </div>
     
-    </div>
-  )
-}
 
-export default Register
+    try {
+      dispatch(showLoading());
+      const res = await axios.post('api/user/register', formDataObject);
+      dispatch(hideLoading());
+
+      if (res.data.success) {
+        toast('Please check your email to verify your account');
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (err) {
+      dispatch(hideLoading());
+      toast.error('Something went wrong');
+    }
+  };
+
+  return (
+    <div className="authentication-page">
+      <div className="fullscreen-center">
+        <div className="card-fixed"> 
+          <form onSubmit={onFinish}>
+            <div className="mb-3">
+              <h2 className="text-center">Sign Up</h2>
+            </div>
+            <div className="mb-3">
+              <input name="username" type="text" className="form-control" placeholder="Username" required />
+            </div>
+            <div className="mb-3">
+              <input name="email" type="email" className="form-control" placeholder="Email" required />
+            </div>
+            <div className="mb-3">
+              <input name="password" type="password" className="form-control" placeholder="Password" required />
+            </div>
+            <div className="mb-3">
+              <input name="confirmPassword" type="password" className="form-control" placeholder="Confirm Password" required />
+            </div>
+            <div className="mb-3">
+              <button type="submit" className="btn btn-primary w-100">Submit</button>
+            </div>
+            <div className="text-center">
+              <a href="/login">Sign in</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
