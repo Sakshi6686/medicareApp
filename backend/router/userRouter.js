@@ -1,8 +1,10 @@
 import express from "express";
 import User from "../models/userModel.js";
-import  getToken  from "../utils/helper.js";
+import { getToken, sendVerifyEmail, sendResetPasswordEmail } from "../utils/helper.js";
+ 
 import bcrypt from "bcrypt";
-import verifyEmail from "../utils/verifyEmail.js";
+ 
+import jwt from "jsonwebtoken";
 import Token from "../models/Token.js";
 import crypto from "crypto"
 import Doctor from "../models/doctorModel.js"
@@ -11,19 +13,23 @@ import { rootCertificates } from "tls";
 import { log } from "console";
 import Appointment from "../models/appointmentModel.js";
 import moment from "moment"
+import axios from "axios"
+import nodemailer from "nodemailer"
+import dotenv from "dotenv"
+dotenv.config();
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
     try {
-        const { username, email, password, confirmPassword, location } = req.body;
+        const { username, email, password, confirmPassword } = req.body;
         console.log("data recieved");
-        if (!username || !email || !password || !confirmPassword || !location) {
+        if (!username || !email || !password || !confirmPassword ) {
             return res.status(400).json({ err: "Invalid request body" });
         }
         console.log("yeah");
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.status(402).json({ err: "A user with this email already exist" });
+            return res.status(409).json({ err: "A user with this email already exist" });
         }
 
 
@@ -32,7 +38,7 @@ router.post("/register", async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            location,
+         
 
 
         };
@@ -40,61 +46,42 @@ router.post("/register", async (req, res) => {
 
 
         const newUser = await User.create(newUserDetails);
-        // const token = await getToken(email, newUser);
-        // console.log("user createdd", newUser);
-
-
-        // const userToReturn = {
-        //     _id: newUser._id,
-        //     username: newUser.username,
-        //     email: newUser.email,
-
-        //     token: token,
-        // };
-
-        // delete userToReturn.password;
-        // const tokenEmail=new Token({
-        //     userId:newUser.id,
-        //     token:crypto.randomBytes(16).toString("hex"),
-        // })
-        //console.log(tokenEmail);
-
-
-        // const link=`http://localhost:3000//api/user/confirm/${tokenEmail.token}`;
-        // const  verification =await verifyEmail(email,link);
-        // if(verification.success){
-        //     return res.status(200).send({message:"Email sent ,check your mail",success:true});
-        // }
-        // else{
-        //     return res.status(200).send({message:verification.message,success:false});
-        // }
-
-
-
-        //     console.log("returning user");
-        //    // console.log(userToReturn);
-        return res.status(200).send({ message: "user created successfully", success: true });
+        console.log(`user id in reg back ${newUser._id}`);
+                if(newUser){
+                  await sendVerifyEmail(username,email,newUser._id)
+                    res.status(200).send({ message: "user created successfully", success: true });
+                }
+                else{
+                    res.status(200).send({ message: "user registration failed", success: false });
+                }
+        
+         
     }
     catch (err) {
         console.log(err);
     }
 })
 
-// router.post("confirm/:token",async (req,res)=>{
-//     try{
-//         const token=await Token.findOne({
-//             token:req.params.token,
-//         })
-//         console.log(token);
-//         await User.updateOne({_id:token.userId},{$set:{verified:true}});
-//         await Token.findByIdAndRemove(token._id);
-//         res.send("email verified");
-//     }
-//     catch(error){
-//         res.status(400).send("an error occured");
-//     }
-// }
-// )
+router.post("/verifyemail/:id",async (req,res)=>{
+    try{
+        console.log(`user id in router get ${req.params.id}`);
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: { isEmailVerified: true } },
+            { new: true } // This option returns the modified document
+          );
+            console.log(updatedUser);
+        console.log(`email verified and userUpdated ${updatedUser}`);
+        return res.status(200).send({ message: "Email verified successfully", success: true });
+    }
+    catch(e){
+        console.log(e.message);
+        return res.status(500).json({ err: "Internal server error" });
+    }
+})
+
+
+
 router.post("/login", async (req, res) => {
     try {
 
@@ -105,6 +92,7 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ err: "Invalid email or password" });
         }
         const user = await User.findOne({ email: email });
+        console.log(user);
 
         if (!user) {
             return res.status(200).send({ message: "user does not exist", success: false });
@@ -120,17 +108,7 @@ router.post("/login", async (req, res) => {
         const token = await getToken(email, user);
         console.log(token);
 
-        //const  userToReturn={...user.toJSON(),token};
-        // const userToReturn = {
-        //     _id: user._id,
-        //     username: user.username,
-        //     email: user.email,
-
-        //     token: token,
-        // };
-
-        // delete userToReturn.password;
-        //console.log(userToReturn);
+         
 
         return res.status(200).send({ message: "login successful", success: true, data:token });
 
@@ -139,6 +117,66 @@ router.post("/login", async (req, res) => {
     }
 
 })
+
+router.post("/forgotpassword", async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ err: "Email is required" });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(200).send({ message: "this email does not exit", success: false });
+        }
+
+        const token = await getToken(email, user);
+        console.log(`token in fp ${token}`);
+       
+        const resetLink = `http://localhost:3000/resetpassword/${token}`;  
+        await sendResetPasswordEmail(user.username, email, resetLink);
+
+        return res.status(200).send({ message: "Password reset link sent to your email",success:true });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ err: "Internal server error" });
+    }
+});
+router.post("/resetpassword/:token", async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword, confirmPassword } = req.body;
+
+        if (!newPassword || !confirmPassword) {
+            return res.status(400).json({ err: "New password and confirm password are required" });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ err: "Passwords do not match" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({ err: "User not found" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({ message: "Password reset successfully" });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ err: "Internal server error" });
+    }
+});
+
+
 
 
 router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
@@ -381,34 +419,9 @@ router.get("/get-appointments-by-user-id",authMiddleware,async (req,res)=>{
         })
     }
 })
+ 
 
-router.get("/get-near-by-doctors",authMiddleware,async(req,res)=>{
-   // const { latitude, longitude } = req.body;
-    const latitude=  37.7833
+
   
-    const longitude=   -122.4167
-    const radius = 5000; // Specify the search radius in meters (max: 50000 meters)
-  
-    try {
-      const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
-        params: {
-          location: `${latitude},${longitude}`,
-          radius: radius,
-          type: 'doctor',
-          key: 'YOUR_GOOGLE_API_KEY', // Replace with your actual Google API key
-        },
-      });
-  
-      // Filter places to include only those with type 'doctor'
-      const nearbyDoctors = response.data.results.filter(place =>
-        place.types.includes('doctor')
-      );
-  console.log(nearbyDoctors);
-     // res.json({ nearbyDoctors });
-    } catch (error) {
-      console.error('Error searching for nearby doctors:', error);
-      res.status(500).json({ error: 'An error occurred while searching for nearby doctors.' });
-    }
-})
 
 export default router;

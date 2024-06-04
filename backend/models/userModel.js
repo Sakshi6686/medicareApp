@@ -14,13 +14,7 @@ const userSchema=new mongoose.Schema({
         required:true,
     },
 
-    location:{
-        type: {
-            latitude: Number,
-            longitude: Number
-        },
-        required: true,
-    },
+     
     isDoctor:{
         type:Boolean,
         default:false,
@@ -38,6 +32,10 @@ const userSchema=new mongoose.Schema({
         type:Array,
         default:[],
     },
+    isEmailVerified:{
+        type:Boolean,
+        default:false,
+    }
      
 }
 ,
