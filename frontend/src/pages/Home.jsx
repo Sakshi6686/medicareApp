@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useState , useContext} from "react";
 import 'antd/dist/antd.css';
 import axios from "axios";
 import Layout from "../component/layout";
@@ -7,12 +7,14 @@ import { setUser } from "../redux/userSlice";
 import { Col, Row } from "antd";
 import Doctor from "../component/Doctor";
 import { hideLoading, showLoading } from "../redux/alertSlice";
+import { SearchContext } from "../context/SearchContext";
 
 function Home(){
   const dispatch=useDispatch();
   const {user}=useSelector((state)=>state.user)
   const [doctors,setDoctors]=useState([]);
-const getData=async()=>{
+  const { searchResults } = useContext(SearchContext); 
+ const getData=async()=>{
   try{
     const res=await axios.post("/api/user/get-user-info-by-id",{},{
       headers:{
@@ -67,15 +69,24 @@ useEffect(() => {
 }, []);
 return (
   <Layout>
-    <Row gutter={20}>
-    {doctors.map((doctor)=>{
-      return(<Col span={8} xs={24} sm={24} lg={8}>
-        <Doctor doctor={doctor}/>
-      </Col>)
-      
-    })}
+      <Row gutter={20}>
+        {searchResults.length > 0 ? (
+          // If there are search results, render them
+          searchResults.map((doctor) => (
+            <Col key={doctor._id} span={8} xs={24} sm={24} lg={8}>
+              <Doctor doctor={doctor} />
+            </Col>
+          ))
+        ) : (
+          // If there are no search results, render the default list of doctors
+          doctors.map((doctor) => (
+            <Col key={doctor._id} span={8} xs={24} sm={24} lg={8}>
+              <Doctor doctor={doctor} />
+            </Col>
+          ))
+        )}
       </Row>
-  </Layout>
+    </Layout>
 );
 }
 

@@ -11,7 +11,8 @@ const Doctor = ({ doctor }) => {
             <p  ><b>Phone Number: </b>{doctor.phoneNumber}</p>
             <p  ><b>Address: </b>{doctor.address}</p>
             <p  ><b>Fee per visit: </b>{doctor.feePerConsultation}</p>
-            <p  ><b>Fee per visit: </b>{doctor.timings[0]}-{doctor.timings[1]}</p>
+           
+            <p  ><b>Specialization: </b>{doctor.specialization}</p>
                
          
 

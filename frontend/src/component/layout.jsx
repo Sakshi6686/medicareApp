@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,   useEffect, useContext } from 'react';
 import 'antd/dist/antd.css';
  
-import { useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge } from 'antd';
+import { Badge, Input, Button } from 'antd';
 import { useSelector } from 'react-redux';
+import { SearchContext } from '../context/SearchContext';
+import toast from 'react-hot-toast';
 
 function Layout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
+  const [searchSpeciality, setSearchSpeciality] = useState('');
+  const { setSearchResults } = useContext(SearchContext);
+   const location=useLocation();
+  
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const userId = user && user._id;
@@ -35,6 +39,47 @@ function Layout({ children }) {
 
   let menuToBeRendered = user && user.isAdmin ? adminMenu : user && user.isDoctor ? doctorMenu : userMenu;
   const role = user && user.isAdmin ? 'Admin' : user && user.isDoctor ? 'Doctor' : 'User';
+
+  const [location2, setLocation] = useState(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error getting location: ", error);
+      }
+    );
+  }, []);
+  useEffect(() => {
+    if (!searchSpeciality) {
+      setSearchResults([]);
+    }
+  }, [searchSpeciality, setSearchResults]);
+  const handleSearch = async () => {
+    if (!location) {
+      alert('Location not available');
+      return;
+    }
+    try {
+      console.log("hsh",searchSpeciality,location2.latitude,location2.longitude);
+      const res = await axios.post(`/api/doctor/search`, {
+        searchSpeciality: searchSpeciality,
+        latitude: location2.latitude,
+        longitude: location2.longitude,
+      });
+
+      setSearchResults(res.data.doctors);
+      console.log(res.data.message);
+    } catch (error) {
+      toast.error("something went wrong")
+      console.error("Error searching doctors: ", error);
+    }
+  };
 
   return (
     <div className='main'>
@@ -70,7 +115,16 @@ function Layout({ children }) {
             ) : (
               <i className="ri-close-fill header-action-icon" onClick={() => setCollapsed(true)}></i>
             )}
-            <div className='d-flex align-items-center px-4'>
+            <div className='search-section'>
+              <Input
+                placeholder="Search speciality..."
+                value={searchSpeciality}
+                onChange={(e) => setSearchSpeciality(e.target.value)}
+                className='search-input'
+              />
+              <Button onClick={handleSearch} className='search-button'>Search</Button>
+            </div>
+            <div className='d-flex align-items-center'>
               <Badge count={user && user.unseenNotification ? user.unseenNotification.length : 0} onClick={() => navigate('/notifications')}>
                 <i className="ri-notification-line header-action-icon px-3"></i>
               </Badge>
@@ -79,6 +133,7 @@ function Layout({ children }) {
           </div>
           <div className='body'>
             {children}
+            
           </div>
         </div>
       </div>

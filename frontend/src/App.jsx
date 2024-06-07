@@ -23,6 +23,8 @@ import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 import VerifyEmail from './pages/VerifyEmail';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
+import { SearchProvider } from './context/SearchContext';
+ 
 
 function App() {
   const {loading}=useSelector((state)=>state.alerts);
@@ -34,7 +36,8 @@ function App() {
 
 </div>
 </div> }
-     
+           <SearchProvider>
+
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -45,7 +48,7 @@ function App() {
         <Route path="/verifyemail/:id" element={<PublicRoute><VerifyEmail/></PublicRoute>} />
         <Route path="/resetpassword/:token" element={<PublicRoute><ResetPassword/></PublicRoute>} />
         <Route path="/forgotpassword" element={<PublicRoute><ForgotPassword/></PublicRoute>} />
-        
+         
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/apply-doctor" element={<ProtectedRoute><ApplyDoctor/></ProtectedRoute>} />
         <Route path="/admin/userslist" element={<ProtectedRoute><UsersList/></ProtectedRoute>} />
@@ -57,6 +60,7 @@ function App() {
         <Route path="/doctor/appointments" element={<ProtectedRoute><DoctorAppointments/></ProtectedRoute>} />
         <Route path="/" element={<Frontpg />} />
       </Routes>
+      </SearchProvider>
     </BrowserRouter>
 
 

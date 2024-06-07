@@ -121,4 +121,65 @@
   .ant-badge-count {
     background-color: #ff4d4f;
   }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-section {
+    display: flex;
+    flex-grow: 1;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  .search-input {
+    width: 100%;
+    margin-right: 10px;
+  }
+  
+  .search-button {
+    white-space: nowrap;
+  }
+  
+  .header-action-icon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .header-action-icon:hover {
+    color: #1890ff;
+  }
+  
+  .body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .search-results {
+    margin-top: 20px;
+  }
+  
+  .search-result-item {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .search-result-item a {
+    color: #1890ff;
+    text-decoration: none;
+  }
+  
+  .search-result-item a:hover {
+    text-decoration: underline;
+  }
   
