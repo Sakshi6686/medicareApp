@@ -5,7 +5,7 @@ import { getToken, sendVerifyEmail, sendResetPasswordEmail } from "../utils/help
 import bcrypt from "bcrypt";
  
 import jwt from "jsonwebtoken";
-import Token from "../models/Token.js";
+ 
 import crypto from "crypto"
 import Doctor from "../models/doctorModel.js"
 import authMiddleware from "../middlewares/authMiddlewares.js";
@@ -210,38 +210,44 @@ router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
     }
 })
 
-router.post("/apply-doctor-account",authMiddleware,async (req,res)=>{
-    try{
+router.post("/apply-doctor-account", authMiddleware, async (req, res) => {
+    try {
         const existingDoctor = await Doctor.findOne({ userId: req.body.userId });
-        console.log(existingDoctor);
         if (existingDoctor) {
-            return res.status(200).json({ success:false,message:"A Doctor with this account already exist"});
+            return res.status(200).json({ success: false, message: "A Doctor with this account already exists" });
         }
+           
+        const { location, ...doctorData } = req.body;
+      
 
-                const newDoctor=new Doctor({...req.body,status:"pending"});
+        const longitude=location.longitude;
+        const latitude=location.latitude;
+        console.log("lati, longi",longitude,latitude);
+        const newDoctor = new Doctor({ ...doctorData, location: { type: "Point", coordinates: [longitude, latitude] }, status: "pending" });
 
-                await newDoctor.save();
-                const adminUser=await User.findOne({isAdmin:true});
-                const unseenNotification=adminUser.unseenNotification
-                unseenNotification.push({
-                    type:"new-doctor-request",
-                    message:`${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account`,
-                    data:{
-                        doctorId:newDoctor.id,
-                        name:newDoctor.firstName + " " +newDoctor.lastName
-                    },
-                    onClickPath:"/admin/doctorslist"
+        await newDoctor.save();
 
-                })
-                await User.findByIdAndUpdate(adminUser.id,{unseenNotification});
-                res.status(200).send({success:true,message:"Doctor account applied successfully"})
+        const adminUser = await User.findOne({ isAdmin: true });
+        const unseenNotification = adminUser.unseenNotification;
+        unseenNotification.push({
+            type: "new-doctor-request",
+            message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account`,
+            data: {
+                doctorId: newDoctor.id,
+                name: `${newDoctor.firstName} ${newDoctor.lastName}`,
+            },
+            onClickPath: "/admin/doctorslist",
+        });
+        await User.findByIdAndUpdate(adminUser.id, { unseenNotification });
+
+        res.status(200).json({ success: true, message: "Doctor account applied successfully" });
+    } catch (err) {
+        console.error("Error applying doctor account: ", err);
+        res.status(500).json({ message: "Error applying doctor account", success: false, err });
     }
-    catch (err) {
-        console.log(err);
-        res.status(500).send({message:"Error applying doctor account",success:false,err})
-    }
-    
-})
+});
+
+  
 
 
 router.post("/mark-all-notifications-as-seen",authMiddleware,async (req,res)=>{

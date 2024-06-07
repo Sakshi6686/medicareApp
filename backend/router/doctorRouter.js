@@ -116,4 +116,35 @@ router.post("/change-appointment-status",authMiddleware,async (req,res)=>{
         })
     }
 })
+
+router.post('/search', async (req, res) => {
+    console.log("dhs");
+    const { searchSpeciality, latitude, longitude, radius = 5000000 } = req.body;
+  console.log("hsh");
+  console.log(searchSpeciality, latitude, longitude);
+    if (!searchSpeciality || !latitude || !longitude) {
+      return res.status(400).json({ message: 'searchSpeciality, latitude, and longitude are required' });
+    }
+  console.log("hi");
+    try { 
+      const doctors = await Doctor.find({
+        specialization: new RegExp(searchSpeciality, 'i'),
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [parseFloat(longitude), parseFloat(latitude)],
+            },
+            $maxDistance: parseFloat(radius),
+          },
+        },
+      });
+  console.log(doctors);
+      res.json({ doctors });
+    } catch (error) {
+      console.error('Error searching doctors:', error);
+      res.status(500).json({ message: 'Error searching doctors', error });
+    }
+  });
+
 export default router;
