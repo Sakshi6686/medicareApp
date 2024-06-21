@@ -11,6 +11,7 @@ import { setUser } from '../redux/userSlice';
 import moment from "moment"
 import { Row,Col, DatePicker, TimePicker, Button } from 'antd';
  
+ 
 
 const BookAppointment = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const BookAppointment = () => {
     const [isAvailable,setIsAvailable]=useState(false);
     const [date,setDate]=useState(null);
     const [time,setTime]=useState(null);
+    const [isBooked,setIsBooked]=useState(false);
 
     const bookNow=async()=>{
         try {
@@ -36,9 +38,9 @@ const BookAppointment = () => {
               console.log(res.data);
             dispatch(hideLoading())
             if (res.data.success) {
-              
+              setIsBooked(true);
              toast.success(res.data.message);
-             navigate("/appointments")
+              
       
             }
       
@@ -134,6 +136,7 @@ const BookAppointment = () => {
 <p  ><b>Address: </b>{doctor.address}</p>
 <p  ><b>Fee per visit: </b>{doctor.feePerConsultation}</p>
 <p  ><b>Website: </b>{doctor.website}</p>
+<p  ><b>Speciality: </b>{doctor.specialization}</p>
 <div className='d-flex flex-column pt-2 mt-2'>
 
     <DatePicker format="DD-MM-YYYY"  onChange={(value)=>{
@@ -143,12 +146,16 @@ const BookAppointment = () => {
         setIsAvailable(false)
         setTime(moment(value).format("HH:mm"),
     )}} />
+   
     {!isAvailable && (<Button className='primary-button mt-3 full-width-button' onClick={checkAvailability}>Check Availability</Button>)}
     
     {isAvailable && (<Button className='primary-button mt-3 full-width-button' onClick={bookNow}>Book Now</Button>)}
+   
+
 </div>
     </Col>
-   
+
+    
    </Row>
     
     </div>

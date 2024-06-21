@@ -91,13 +91,7 @@ const columns=[
       </span>
 
     },
-    {
-      title: "Speciality",
-      dataIndex:"specialization",
-      render:(text,record)=><span>{record.doctorInfo.
-specialization}</span>
-
-    },
+     
     {
       title: "Status",
       dataIndex:"status",

@@ -78,7 +78,7 @@ return (
             </Col>
           ))
         ) : (
-          // If there are no search results, render the default list of doctors
+          
           doctors.map((doctor) => (
             <Col key={doctor._id} span={8} xs={24} sm={24} lg={8}>
               <Doctor doctor={doctor} />
