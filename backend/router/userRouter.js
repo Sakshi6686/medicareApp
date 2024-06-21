@@ -181,17 +181,18 @@ router.post("/resetpassword/:token", async (req, res) => {
 
 router.post("/get-user-info-by-id", authMiddleware, async (req,res) => {
     try {
-       // console.log("try get");
+       console.log("try get");
          const user = await User.findById(req.body.userId);
         // const user = await User.findById(req.userId);
         user.password=undefined
         console.log(user);
         if (!user) {
           //  console.log("not user get");
+          console.log("hiee");
             return res.status(200).send({ message: "User does not exist", success: false });
         }
         else {
-          //  console.log("in else get-user");
+          console.log("in else get-user");
 
 
             // console.log(user.username);
@@ -427,6 +428,41 @@ router.get("/get-appointments-by-user-id",authMiddleware,async (req,res)=>{
 })
  
 
+router.get("/get-approved-doctors", authMiddleware, async (req, res) => {
+    try {
+      const appointments = await Appointment.find({
+        userId: req.query.userId,
+        status: "Approved",
+      }) 
+
+      console.log(appointments);
+      const doctors = appointments.map(appointment => ({
+        doctorInfo: appointment.doctorInfo,
+        appointment: {
+          date: appointment.date,
+          time: appointment.time,
+        }
+      }));
+  
+      console.log(doctors);
+      res.status(200).send({
+        message: "Approved appointments fetched successfully",
+        success: true,
+        data: doctors,
+      });
+  
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: "Error getting appointments",
+        success: false,
+        err,
+      });
+    }
+  });
+  
+ 
+  
 
   
 
