@@ -22,12 +22,14 @@ function Layout({ children }) {
     { name1: 'Home', path: '/home', icon: 'ri-home-line' },
     { name1: 'Appointments', path: '/appointments', icon: 'ri-file-list-line' },
     { name1: 'Apply Doctor', path: '/apply-doctor', icon: 'ri-hospital-line' },
+    { name1: 'Doctors', path: '/approved-doctors', icon: 'ri-hospital-line' },
   ];
 
   const doctorMenu = [
     { name1: 'Home', path: '/home', icon: 'ri-home-line' },
     { name1: 'Appointments', path: '/doctor/appointments', icon: 'ri-file-list-line' },
     { name1: 'Profile', path: `/doctor/profile/${userId}`, icon: 'ri-user-line' },
+    { name1: 'Patients', path: `/doctor/approved-patients`, icon: 'ri-user-line' },
   ];
 
   const adminMenu = [
