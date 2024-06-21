@@ -23,7 +23,11 @@ import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 import VerifyEmail from './pages/VerifyEmail';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
+ import Chat from './pages/Chat';
+  import ApprovedDoctors from './pages/ApprovedDoctors';
+  import ApprovedPatients from './pages/Doctor/ApprovedPatients';
 import { SearchProvider } from './context/SearchContext';
+import "./styles/chatbot.css";
  
 
 function App() {
@@ -51,10 +55,15 @@ function App() {
          
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/apply-doctor" element={<ProtectedRoute><ApplyDoctor/></ProtectedRoute>} />
+        <Route path="/chat-bot/:id" element={<ProtectedRoute><Chat/></ProtectedRoute>} />
         <Route path="/admin/userslist" element={<ProtectedRoute><UsersList/></ProtectedRoute>} />
         <Route path="/admin/doctorslist" element={<ProtectedRoute><DoctorsList/></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><Notifications/></ProtectedRoute>} />
         <Route path="/doctor/profile/:userId" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
+       
+        <Route path="/approved-doctors" element={<ProtectedRoute><ApprovedDoctors/></ProtectedRoute>} />
+        <Route path="/doctor/approved-patients" element={<ProtectedRoute><ApprovedPatients/></ProtectedRoute>} />
+       
         <Route path="/book-appointment/:doctorId" element={<ProtectedRoute><BookAppointment/></ProtectedRoute>} />
         <Route path="/appointments" element={<ProtectedRoute><Appointments/></ProtectedRoute>} />
         <Route path="/doctor/appointments" element={<ProtectedRoute><DoctorAppointments/></ProtectedRoute>} />
