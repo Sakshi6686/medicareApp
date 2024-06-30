@@ -28,6 +28,10 @@ import ForgotPassword from './pages/ForgotPassword';
   import ApprovedPatients from './pages/Doctor/ApprovedPatients';
 import { SearchProvider } from './context/SearchContext';
 import "./styles/chatbot.css";
+import VideoChat from './pages/VideoChat';
+import './styles/videoChat.css'
+import { SocketProvider } from './context/SocketProvider';  
+
  
 
 function App() {
@@ -40,6 +44,8 @@ function App() {
 
 </div>
 </div> }
+
+<SocketProvider>
            <SearchProvider>
 
       <Toaster
@@ -56,6 +62,7 @@ function App() {
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/apply-doctor" element={<ProtectedRoute><ApplyDoctor/></ProtectedRoute>} />
         <Route path="/chat-bot/:id" element={<ProtectedRoute><Chat/></ProtectedRoute>} />
+        <Route path="/video-chat/:senderId/:receiverId" element={<ProtectedRoute><VideoChat/></ProtectedRoute>} />
         <Route path="/admin/userslist" element={<ProtectedRoute><UsersList/></ProtectedRoute>} />
         <Route path="/admin/doctorslist" element={<ProtectedRoute><DoctorsList/></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><Notifications/></ProtectedRoute>} />
@@ -70,6 +77,7 @@ function App() {
         <Route path="/" element={<Frontpg />} />
       </Routes>
       </SearchProvider>
+      </SocketProvider>
     </BrowserRouter>
 
 
