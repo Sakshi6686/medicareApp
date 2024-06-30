@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../component/layout';
 import axios from 'axios';
+import {  useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { hideLoading, showLoading } from '../redux/alertSlice';
- import {io} from "socket.io-client"
+import { useSocket } from "../context/SocketProvider";
+  
  
 const Chat = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const params = useParams();
-
+  const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
   const senderId = user?._id;
   const receiverId = params.id; 
 
-  const [socket,setSocket]=useState(null)
+ const socket=useSocket();
   const [users,setUsers]=useState([]);
   useEffect(() => {
     if (!user) {
@@ -27,9 +29,7 @@ const Chat = () => {
     }
   }, [user, dispatch]);
 
-  useEffect(()=>{
-      setSocket(io("http://localhost:8000"))
-  },[])
+   
 
   useEffect(() => {
     if (socket && user) {
@@ -89,6 +89,9 @@ const Chat = () => {
       console.error('Error sending message:', error);
     }
   };
+  const handleVideoChat= async()=>{
+          navigate(`/video-chat/${senderId}/${receiverId}`);
+  }
 
   if (!user) {
     return <div>Loading...</div>;
@@ -108,6 +111,7 @@ const Chat = () => {
           ))}
         </div>
         <div className="input-container">
+        <button onClick={handleVideoChat}>Video chat</button>
           <input
             type="text"
             value={message}
