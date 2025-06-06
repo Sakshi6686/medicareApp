@@ -14,7 +14,7 @@ const Register = () => {
    
 
    
-
+ const url="https://medicareapp-backend.onrender.com"
   const onFinish = async (e) => {
     e.preventDefault();
      
@@ -32,7 +32,7 @@ const Register = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post('api/user/register', formDataObject);
+      const res = await axios.post(url+'api/user/register', formDataObject);
       dispatch(hideLoading());
 
       if (res.data.success) {
