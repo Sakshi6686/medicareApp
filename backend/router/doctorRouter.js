@@ -1,7 +1,7 @@
 import express from "express";
 
 import Doctor from "../models/doctorModel.js";
-import authMiddleware from "../middlewares/authMiddlewares.js";
+import authMiddleware from "../middlewares\authmiddlewares.js";
 import Appointment from "../models/appointmentModel.js";
 import User from "../models/userModel.js";
 const router=express.Router();

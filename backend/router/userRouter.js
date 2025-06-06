@@ -2,13 +2,14 @@ import express from "express";
 import User from "../models/userModel.js";
 import { getToken, sendVerifyEmail, sendResetPasswordEmail } from "../utils/helper.js";
  
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
  
 import jwt from "jsonwebtoken";
- 
+ //medicareApp\backend\middlewares\authmiddlewares.js
 import crypto from "crypto"
 import Doctor from "../models/doctorModel.js"
-import authMiddleware from "../middlewares/authMiddlewares.js";
+//import authMiddleware from "../middlewares/authMiddlewares.js";
+import authMiddleware from "../middlewares\authmiddlewares.js";
 import { rootCertificates } from "tls";
 import { log } from "console";
 import Appointment from "../models/appointmentModel.js";
