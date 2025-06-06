@@ -7,96 +7,85 @@ const Doctor = ({ doctor, appointment, approved }) => {
   const navigate = useNavigate();
   const [timeUntilChat, setTimeUntilChat] = useState('');
   const [canChat, setCanChat] = useState(false);
+  const [appointmentDateTime, setAppointmentDateTime] = useState(null);
   const [appointmentEndTime, setAppointmentEndTime] = useState(null);
 
   useEffect(() => {
-    if (doctor && appointment) {
-      const appointmentDate = moment(appointment.date);
-      const appointmentTime = moment(appointment.time, 'HH:mm:ss');
-      const appointmentDateTime = appointmentDate.set({
-        hour: appointmentTime.get('hour'),
-        minute: appointmentTime.get('minute'),
-        second: appointmentTime.get('second'),
-      });
+    if (doctor && appointment && appointment.time) {
+   
+      const appointmentStart = moment(appointment.time); 
+      const appointmentEnd = moment(appointmentStart).add(1, 'hour');
 
-      const oneHourAfterAppointment = moment(appointmentDateTime).add(1, 'hour');
-      setAppointmentEndTime(oneHourAfterAppointment);
+      setAppointmentDateTime(appointmentStart);
+      setAppointmentEndTime(appointmentEnd);
 
-      const now = moment();
-      if (now.isBefore(appointmentDateTime)) {
-        const interval = setInterval(() => {
-          const now = moment();
-          const duration = moment.duration(appointmentDateTime.diff(now));
-          if (now.isAfter(appointmentDateTime)) {
-            setCanChat(true);
-            clearInterval(interval);
-          } else {
-            setTimeUntilChat(formatTimeUntilChat(duration));
-          }
-        }, 1000);
+      const interval = setInterval(() => {
+        const now = moment();
 
-        return () => clearInterval(interval);
-      } else {
-        setCanChat(true);
-      }
+        if (now.isBefore(appointmentStart)) {
+          const duration = moment.duration(appointmentStart.diff(now));
+          setTimeUntilChat(formatDuration(duration));
+          setCanChat(false);
+        } else if (now.isSameOrAfter(appointmentStart) && now.isBefore(appointmentEnd)) {
+          setCanChat(true);
+          setTimeUntilChat('');
+        } else {
+          setCanChat(false);
+          setTimeUntilChat('');
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
     }
-  }, [doctor]);
+  }, [doctor, appointment]);
 
   const handleChatClick = (e) => {
     e.stopPropagation();
     navigate(`/chat-bot/${doctor.userId}`, { state: { isDoctor: true } });
   };
 
-  const formatTimeUntilChat = (duration) => {
-    if (duration.days() >= 1) {
-      return `${duration.days()}d ago`;
-    } else if (duration.hours() >= 1) {
-      return `${duration.hours()}h ago`;
-    } else if (duration.minutes() >= 1) {
-      return `${duration.minutes()}m ago`;
-    } else {
-      return `${duration.seconds()}s ago`;
-    }
+  const formatDuration = (duration) => {
+    const h = duration.hours();
+    const m = duration.minutes();
+    const s = duration.seconds();
+    if (duration.days() > 0) return `${duration.days()}d`;
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
   };
 
-  const calculateTimeElapsed = () => {
-    if (appointmentEndTime) {
-      const now = moment();
+  const renderTimeMessage = () => {
+    const now = moment();
+    if (!appointmentDateTime || !appointmentEndTime) return null;
+
+    if (now.isBefore(appointmentDateTime)) {
+      return <div className="timer">Chat available in: {timeUntilChat}</div>;
+    } else if (now.isAfter(appointmentEndTime)) {
       const duration = moment.duration(now.diff(appointmentEndTime));
-      if (duration.asDays() >= 7) {
-        return `${Math.floor(duration.asDays() / 7)}w ago`;
-      } else if (duration.asDays() >= 30) {
-        return `${Math.floor(duration.asDays() / 30)}mo ago`;
-      } else if (duration.asDays() >= 365) {
-        return `${Math.floor(duration.asDays() / 365)}y ago`;
-      } else {
-        return formatTimeUntilChat(duration);
-      }
+      return <div className="timer">Appointment ended: {formatDuration(duration)} ago</div>;
     }
-    return '';
+    return null;
   };
 
   return (
-    <div className='card p-2 cursor-pointer' onClick={() => !approved && navigate(`/book-appointment/${doctor._id}`)}>
-      <h1 className="card-title">{doctor.firstName} {doctor.lastName}</h1>
+    <div
+      className="card p-2 cursor-pointer"
+      onClick={() => !approved && navigate(`/book-appointment/${doctor._id}`)}
+    >
+      <h1 className="card-title">
+        {doctor.firstName} {doctor.lastName}
+      </h1>
       <hr />
       <p><b>Phone Number: </b>{doctor.phoneNumber}</p>
       <p><b>Address: </b>{doctor.address}</p>
       <p><b>Fee per visit: </b>{doctor.feePerConsultation}</p>
       <p><b>Specialization: </b>{doctor.specialization}</p>
+
       {approved && (
-        <React.Fragment>
-          {!canChat && (
-            <div className="timer">
-              Chat available in: {timeUntilChat}
-            </div>
-          )}
-          {canChat && appointmentEndTime && (
-            <div className="timer">
-              Appointment ended: {calculateTimeElapsed()}  
-            </div>
-          )}
-          {canChat && !appointmentEndTime && (
+        <>
+          {renderTimeMessage()}
+
+          {canChat && (
             <Button
               className="primary-button mt-3 full-width-button"
               onClick={handleChatClick}
@@ -104,7 +93,7 @@ const Doctor = ({ doctor, appointment, approved }) => {
               Chat with Doctor
             </Button>
           )}
-        </React.Fragment>
+        </>
       )}
     </div>
   );
