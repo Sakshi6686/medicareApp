@@ -17,7 +17,7 @@ const BookAppointment = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user)
-    
+     const url="https://medicareapp-backend.onrender.com"
     const params = useParams();
     const [doctor, setDoctor] = useState(null);
     const [isAvailable,setIsAvailable]=useState(false);
@@ -29,7 +29,7 @@ const BookAppointment = () => {
         try {
             dispatch(showLoading());
             console.log("usr",user);
-            const res = await axios.post("/api/user/book-appointment", { doctorId: params.doctorId,doctorInfo:doctor,userInfo:user,date:date,time:time },
+            const res = await axios.post(url+"/api/user/book-appointment", { doctorId: params.doctorId,doctorInfo:doctor,userInfo:user,date:date,time:time },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +57,7 @@ const BookAppointment = () => {
     const checkAvailability=async()=>{
         try {
             dispatch(showLoading());
-            const res = await axios.post("/api/user/check-booking-availability", { doctorId: params.doctorId,date:date,time:time },
+            const res = await axios.post(url+"/api/user/check-booking-availability", { doctorId: params.doctorId,date:date,time:time },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -88,7 +88,7 @@ const BookAppointment = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post("/api/doctor/get-doctor-info-by-id", { doctorId: params.doctorId },
+      const res = await axios.post(url+"/api/doctor/get-doctor-info-by-id", { doctorId: params.doctorId },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
