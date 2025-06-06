@@ -11,13 +11,14 @@ import { hideLoading, showLoading } from '../redux/alertSlice';
 const ProtectedRoute = (props) => {
 const {user}=useSelector((state)=>state.user)
 console.log(user);
+     const url="https://medicareapp-backend.onrender.com"
 const navigate=useNavigate();
 const dispatch=useDispatch();;
 const getUser=async()=>{
 
     try{
         dispatch(showLoading());
-        const res=await axios.post("/api/user/get-user-info-by-id",{token:localStorage.getItem("token")},
+        const res=await axios.post(url+"/api/user/get-user-info-by-id",{token:localStorage.getItem("token")},
         {headers:{
             Authorization:`Bearer ${localStorage.getItem("token")}`,
         },
