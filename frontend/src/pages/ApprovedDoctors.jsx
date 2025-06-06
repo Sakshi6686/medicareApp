@@ -10,11 +10,11 @@ const ApprovedDoctors = () => {
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const [doctors, setDoctors] = useState([])
-
+ const url="https://medicareapp-backend.onrender.com"
   const getApprovedDoctors = async () => {
     try {
       dispatch(showLoading())
-      const res = await axios.get('/api/user/get-approved-doctors', {
+      const res = await axios.get(url+'/api/user/get-approved-doctors', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
