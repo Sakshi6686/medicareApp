@@ -10,6 +10,7 @@ import crypto from "crypto"
 import Doctor from "../models/doctorModel.js"
 //import authMiddleware from "../middlewares/authMiddlewares.js";
 import authMiddleware from "../middlewares/authmiddlewares.js";
+
 import { rootCertificates } from "tls";
 import { log } from "console";
 import Appointment from "../models/appointmentModel.js";
