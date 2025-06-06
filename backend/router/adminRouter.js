@@ -1,7 +1,7 @@
 import express from "express";
 import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js"
-import authMiddleware from "../middlewares/authMiddlewares.js";
+import authMiddleware from "../middlewares/authmiddlewares.js";
 const router = express.Router();
 
 router.get("/get-all-doctors",authMiddleware,async (req,res)=>{
