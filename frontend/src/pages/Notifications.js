@@ -10,6 +10,7 @@ import { hideLoading,showLoading } from '../redux/alertSlice'
 import { setUser } from '../redux/userSlice'
 const Notifications = () => {
     const navigate=useNavigate()
+     const url="https://medicareapp-backend.onrender.com"
     // const [user,setUser]=useState({
         
     // });
@@ -52,7 +53,7 @@ const Notifications = () => {
       try{
 
         dispatch(showLoading());
-        const res=await axios.post("/api/user/mark-all-notifications-as-seen",{userId:user._id},
+        const res=await axios.post(url+"/api/user/mark-all-notifications-as-seen",{userId:user._id},
         {headers:{
           Authorization:`Bearer ${localStorage.getItem("token")}`,
       },
@@ -80,7 +81,7 @@ const Notifications = () => {
                 try{
           
                   dispatch(showLoading());
-                  const res=await axios.post("/api/user/delete-all-notifications",{userId:user._id},
+                  const res=await axios.post(url+"/api/user/delete-all-notifications",{userId:user._id},
                   {headers:{
                     Authorization:`Bearer ${localStorage.getItem("token")}`,
                 },
