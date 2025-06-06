@@ -11,11 +11,11 @@ const Appointments = () => {
   const [appointments,setAppointments]=useState([]);
   const dispatch=useDispatch();
   
-  
+   const url="https://medicareapp-backend.onrender.com"
   const getAppointmentsData=async()=>{
       try{
           dispatch(showLoading());
-          const res=await axios.get("/api/user/get-appointments-by-user-id",{
+          const res=await axios.get(url+"/api/user/get-appointments-by-user-id",{
               headers:{
                   Authorization:`Bearer ${localStorage.getItem("token")}`
               }
