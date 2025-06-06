@@ -8,7 +8,7 @@ import "../styles/authentication.css"
 const ForgotPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+  const url="https://medicareapp-backend.onrender.com"
   const [email, setEmail] = useState('');
  
 
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(`/api/user/forgotpassword`, { email });
+      const res = await axios.post(url+`/api/user/forgotpassword`, { email });
       dispatch(hideLoading());
 
       if (res.data.message) {
