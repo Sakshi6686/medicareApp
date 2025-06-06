@@ -14,9 +14,10 @@ function Home(){
   const {user}=useSelector((state)=>state.user)
   const [doctors,setDoctors]=useState([]);
   const { searchResults } = useContext(SearchContext); 
+   const url="https://medicareapp-backend.onrender.com"
  const getData=async()=>{
   try{
-    const res=await axios.post("/api/user/get-user-info-by-id",{},{
+    const res=await axios.post(url+"/api/user/get-user-info-by-id",{},{
       headers:{
         Authorization: 'Bearer '+localStorage.getItem("token")
       }
@@ -38,7 +39,7 @@ function Home(){
 const getDoctors=async()=>{
   try{
     dispatch(showLoading())
-    const res=await axios.get("/api/user/get-all-approved-doctors",{
+    const res=await axios.get(url+"/api/user/get-all-approved-doctors",{
       headers:{
         Authorization: 'Bearer '+localStorage.getItem("token")
       }
