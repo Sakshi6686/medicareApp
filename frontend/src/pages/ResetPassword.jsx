@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const { token } = useParams();  
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+ const url="https://medicareapp-backend.onrender.com"
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
@@ -27,7 +27,7 @@ const ResetPassword = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(`/api/user/resetpassword/${token}`, { newPassword, confirmPassword });
+      const res = await axios.post(url+`/api/user/resetpassword/${token}`, { newPassword, confirmPassword });
       dispatch(hideLoading());
 
       if (res.data.message) {
