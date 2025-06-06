@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();  
-
+ const url="https://medicareapp-backend.onrender.com"
   useEffect(() => {
     console.log("id:", id);  
   }, [id]);  
@@ -18,7 +18,7 @@ const VerifyEmail = () => {
   const handleVerify = async () => {
     try {
       dispatch(showLoading());
-      const res = await axios.post(`/api/user/verifyemail/${id}`);
+      const res = await axios.post(url+`/api/user/verifyemail/${id}`);
       dispatch(hideLoading());
 
       if (res.data.success) {
