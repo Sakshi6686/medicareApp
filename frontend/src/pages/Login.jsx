@@ -14,6 +14,7 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const url="https://medicareapp-backend.onrender.com"
 
   const handleChange = (e) => {
     setFormData((prevState) => ({
@@ -27,7 +28,7 @@ const Login = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post('api/user/login', formData);
+      const res = await axios.post(url+'api/user/login', formData);
       dispatch(hideLoading());
 
       if (res.data.success) {
