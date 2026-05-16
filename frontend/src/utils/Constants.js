@@ -1,0 +1,1 @@
+export const backendUrl = 'https://medicareapp-backend.onrender.com';  

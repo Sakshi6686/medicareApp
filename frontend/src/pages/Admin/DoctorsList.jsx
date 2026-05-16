@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Table } from 'antd';
 import moment from "moment"
 import toast from "react-hot-toast";
-
+import { backendUrl } from '../../utils/Constants';
 const DoctorsList = () => {
     const [doctors,setDoctors]=useState([]);
 const dispatch=useDispatch();
@@ -15,7 +15,7 @@ const dispatch=useDispatch();
 const getDoctorData=async()=>{
     try{
         dispatch(showLoading());
-        const res=await axios.get("/api/admin/get-all-doctors",{
+        const res=await axios.get(`${backendUrl}/api/admin/get-all-doctors`,{
             headers:{
                 Authorization:`Bearer ${localStorage.getItem("token")}`
             }
@@ -35,7 +35,7 @@ dispatch(hideLoading());
 const changeDoctorStatus=async(record,status)=>{
             try{
                 dispatch(showLoading());
-                const res=await axios.post("/api/admin/change-doctor-account-status",{doctorId:record._id,userId:record.userId,status:status},
+                const res=await axios.post(backendUrl+"/api/admin/change-doctor-account-status",{doctorId:record._id,userId:record.userId,status:status},
                 {
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem("token")}`,

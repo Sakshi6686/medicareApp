@@ -6,15 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
- 
+import { backendUrl } from '../utils/Constants'; 
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
    
 
-   
- const url="https://medicareapp-backend.onrender.com"
   const onFinish = async (e) => {
     e.preventDefault();
      
@@ -32,7 +30,7 @@ const Register = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(url+'api/user/register', formDataObject);
+      const res = await axios.post(backendUrl+'/api/user/register', formDataObject);
       dispatch(hideLoading());
 
       if (res.data.success) {

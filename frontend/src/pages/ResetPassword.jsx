@@ -5,13 +5,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import "../styles/authentication.css"
+import { backendUrl } from '../utils/Constants';
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();  
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
- const url="https://medicareapp-backend.onrender.com"
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
@@ -27,7 +27,7 @@ const ResetPassword = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(url+`/api/user/resetpassword/${token}`, { newPassword, confirmPassword });
+      const res = await axios.post(backendUrl+`/api/user/resetpassword/${token}`, { newPassword, confirmPassword });
       dispatch(hideLoading());
 
       if (res.data.message) {

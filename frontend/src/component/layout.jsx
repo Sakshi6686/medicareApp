@@ -7,6 +7,7 @@ import { Badge, Input, Button } from 'antd';
 import { useSelector } from 'react-redux';
 import { SearchContext } from '../context/SearchContext';
 import toast from 'react-hot-toast';
+import { backendUrl } from '../utils/Constants';
 
 function Layout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -69,7 +70,7 @@ function Layout({ children }) {
     }
     try {
       console.log("hsh",searchSpeciality,location2.latitude,location2.longitude);
-      const res = await axios.post(`/api/doctor/search`, {
+      const res = await axios.post(`${backendUrl}/api/doctor/search`, {
         searchSpeciality: searchSpeciality,
         latitude: location2.latitude,
         longitude: location2.longitude,

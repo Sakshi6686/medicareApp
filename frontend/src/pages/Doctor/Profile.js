@@ -9,7 +9,7 @@ import { hideLoading, showLoading } from '../../redux/alertSlice';
 import DoctorForm from '../../component/DoctorForm';
 import { setUser } from '../../redux/userSlice';
 import moment from "moment"
-
+import { backendUrl } from '../../utils/Constants';
 
 
 const Profile = () => {
@@ -23,7 +23,7 @@ const Profile = () => {
   const onFinish = async (values) => {
     try {
       dispatch(showLoading());
-      const res = await axios.post("/api/doctor/update-doctor-profile", { ...values, userId: user._id, timings: [moment(values.timings[0]).format("HH:mm"), moment(values.timings[1]).format("HH:mm")] },
+      const res = await axios.post(backendUrl+"/api/doctor/update-doctor-profile", { ...values, userId: user._id, timings: [moment(values.timings[0]).format("HH:mm"), moment(values.timings[1]).format("HH:mm")] },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,7 +54,7 @@ const Profile = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post("/api/doctor/get-doctor-info-by-user-id", { userId: params.userId },
+      const res = await axios.post(backendUrl+"/api/doctor/get-doctor-info-by-user-id", { userId: params.userId },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -7,6 +7,7 @@ import axios from 'axios'
 import { Col, Row } from 'antd';
 import { useNavigate } from 'react-router-dom'
 import Patient from '../../component/Patient';
+import { backendUrl } from '../../utils/Constants';
 
 const ApprovedPatients = () => {
     const { user } = useSelector((state) => state.user)
@@ -18,7 +19,7 @@ const ApprovedPatients = () => {
     const getApprovedPatients = async () => {
         try {
             dispatch(showLoading())
-            const res = await axios.get('/api/doctor/get-approved-patients', {
+            const res = await axios.get(backendUrl+'/api/doctor/get-approved-patients', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },

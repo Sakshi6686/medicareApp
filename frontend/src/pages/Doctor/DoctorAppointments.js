@@ -7,6 +7,7 @@ import { Table } from 'antd';
 
 import toast from "react-hot-toast";
 import moment from 'moment';
+import { backendUrl } from '../../utils/Constants';
 const  DoctorAppointments = () => {
   const { user } = useSelector((state) => state.user)
   const [appointments,setAppointments]=useState([]);
@@ -16,7 +17,7 @@ const  DoctorAppointments = () => {
   const getAppointmentsData=async()=>{
       try{
           dispatch(showLoading());
-          const res=await axios.get("/api/doctor/get-appointments-doctor-user-id",{
+          const res=await axios.get(backendUrl+"/api/doctor/get-appointments-doctor-user-id",{
               headers:{
                   Authorization:`Bearer ${localStorage.getItem("token")}`
               }
@@ -36,7 +37,7 @@ const  DoctorAppointments = () => {
   const changeAppointmentStatus=async(record,status)=>{
     try{
         dispatch(showLoading());
-        const res=await axios.post("/api/doctor/change-appointment-status",{appointmentId:record._id,status:status, },
+        const res=await axios.post(backendUrl+"/api/doctor/change-appointment-status",{appointmentId:record._id,status:status, },
         {
         headers:{
             Authorization:`Bearer ${localStorage.getItem("token")}`,

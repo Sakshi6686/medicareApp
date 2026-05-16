@@ -4,11 +4,9 @@ import { useParams } from "react-router-dom";
 import peer from "../service/peer";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
-
 const VideoChat = () => {
   const { user } = useSelector((state) => state.user);
   const socket = useSocket();
- const url="https://medicareapp-backend.onrender.com"
   const { senderId, receiverId } = useParams();
 
   const [myStream, setMyStream] = useState(null);

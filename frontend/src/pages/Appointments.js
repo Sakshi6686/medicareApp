@@ -7,15 +7,15 @@ import { Table } from 'antd';
 
 import toast from "react-hot-toast";
 import moment from 'moment';
+import { backendUrl } from '../utils/Constants';
 const Appointments = () => {
   const [appointments,setAppointments]=useState([]);
   const dispatch=useDispatch();
   
-   const url="https://medicareapp-backend.onrender.com"
   const getAppointmentsData=async()=>{
       try{
           dispatch(showLoading());
-          const res=await axios.get(url+"/api/user/get-appointments-by-user-id",{
+          const res=await axios.get(backendUrl+"/api/user/get-appointments-by-user-id",{
               headers:{
                   Authorization:`Bearer ${localStorage.getItem("token")}`
               }

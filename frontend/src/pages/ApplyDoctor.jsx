@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import DoctorForm from '../component/DoctorForm';
 import moment from 'moment';
+import { backendUrl } from '../utils/Constants';
 
 const ApplyDoctor = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [location, setLocation] = useState(null);
-  const url="https://medicareapp-backend.onrender.com"
+
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -35,7 +36,7 @@ const ApplyDoctor = () => {
       dispatch(showLoading());
       console.log("loc",location);
       if (location) {
-        const res = await axios.post(url+"/api/user/apply-doctor-account", 
+        const res = await axios.post(backendUrl+"/api/user/apply-doctor-account", 
           { 
             ...values, 
             userId: user._id, 

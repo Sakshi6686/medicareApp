@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import { useSocket } from "../context/SocketProvider";
+import { backendUrl } from '../utils/Constants';
   
  
 const Chat = () => {
@@ -15,7 +16,6 @@ const Chat = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
- const url="https://medicareapp-backend.onrender.com"
   const senderId = user?._id;
   const receiverId = params.id; 
 
@@ -55,7 +55,7 @@ const Chat = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(url+`/api/message/${receiverId}`, { params: { senderId } });
+      const res = await axios.get(backendUrl+`/api/message/${receiverId}`, { params: { senderId } });
       if (res.data.success) {
         setMessages(res.data.data);
       }
@@ -77,7 +77,7 @@ const Chat = () => {
 
 
       })
-      const res = await axios.post(url+`/api/message/send/${receiverId}`, {
+      const res = await axios.post(backendUrl+`/api/message/send/${receiverId}`, {
         message,
         senderId,
       });

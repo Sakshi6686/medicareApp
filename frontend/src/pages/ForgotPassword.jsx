@@ -5,10 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import "../styles/authentication.css"
+import { backendUrl } from '../utils/Constants';
 const ForgotPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url="https://medicareapp-backend.onrender.com"
   const [email, setEmail] = useState('');
  
 
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(url+`/api/user/forgotpassword`, { email });
+      const res = await axios.post(backendUrl+`/api/user/forgotpassword`, { email });
       dispatch(hideLoading());
 
       if (res.data.message) {

@@ -5,6 +5,7 @@ import { hideLoading, showLoading } from '../../redux/alertSlice';
 import axios from 'axios';
 import { Table } from 'antd';
 import moment from "moment"
+import { backendUrl } from '../../utils/Constants';
 
 const UsersList = () => {
 
@@ -15,7 +16,7 @@ const dispatch=useDispatch();
 const getUserData=async()=>{
     try{
         dispatch(showLoading());
-        const res=await axios.get("/api/admin/get-all-users",{
+        const res=await axios.get(backendUrl+"/api/admin/get-all-users",{
             headers:{
                 Authorization:`Bearer ${localStorage.getItem("token")}`
             }

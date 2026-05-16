@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
- 
+import { backendUrl } from '../utils/Constants'; 
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,6 @@ const Login = () => {
     email: '',
     password: '',
   });
-  const url="https://medicareapp-backend.onrender.com"
 
   const handleChange = (e) => {
     setFormData((prevState) => ({
@@ -28,7 +27,8 @@ const Login = () => {
 
     try {
       dispatch(showLoading());
-      const res = await axios.post(url+'api/user/login', formData);
+      const res = await axios.post(backendUrl+'/api/user/login', formData);
+      console.log("res", res);
       dispatch(hideLoading());
 
       if (res.data.success) {

@@ -5,12 +5,11 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import "../styles/authentication.css"
-
+import { backendUrl } from '../utils/Constants';
 const VerifyEmail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();  
- const url="https://medicareapp-backend.onrender.com"
   useEffect(() => {
     console.log("id:", id);  
   }, [id]);  
@@ -18,7 +17,7 @@ const VerifyEmail = () => {
   const handleVerify = async () => {
     try {
       dispatch(showLoading());
-      const res = await axios.post(url+`/api/user/verifyemail/${id}`);
+      const res = await axios.post(backendUrl+`/api/user/verifyemail/${id}`);
       dispatch(hideLoading());
 
       if (res.data.success) {
